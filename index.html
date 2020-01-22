@@ -37,16 +37,16 @@
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
+      <li class="nav-item d-none d-sm-inline-block" >
+        <a href="index3.html" class="nav-link" style="display: none;">Home</a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
+      <li class="nav-item d-none d-sm-inline-block" >
+        <a href="#" class="nav-link" style="display: none;">Contact</a>
       </li>
     </ul>
 
     <!-- SEARCH FORM -->
-    <form class="form-inline ml-3">
+    <form class="form-inline ml-3" style="display: none;">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
         <div class="input-group-append">
@@ -58,7 +58,7 @@
     </form>
 
     <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav ml-auto" style="display: none;">
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -755,7 +755,7 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="far fa-chart-bar"></i>
-                  Donut Chart
+                  CPU Chart
                 </h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -777,7 +777,7 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="far fa-chart-bar"></i>
-                  Donut Chart
+                  Memory Chart
                 </h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -799,7 +799,7 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="far fa-chart-bar"></i>
-                  Donut Chart
+                  Disk Chart
                 </h3>
 
                 <div class="card-tools">
@@ -927,7 +927,7 @@
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="dist/js/pages/dashboard.js"></script>
+<!-- <script src="dist/js/pages/dashboard.js"></script> -->
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 
@@ -950,351 +950,375 @@
 
 
 <script>
-  $(function () {
-    /*
-     * Flot Interactive Chart
-     * -----------------------
-     */
-    // We use an inline data source in the example, usually data would
-    // be fetched from a server
-    var cpudata = [];
-    var cputotalCount=100;
-    function getrealtimeCpuData(){
-      $.ajax({
-        url: "data/cpu/20200117cpu",
-        type: "GET",
-        cache: false,
-        success: function (data) {
-          cpudata.push(['a',10]);
-          cpudata.push(['b',20]);
-          cpudata.push(['c',30]);
-          cpudata.push(['d',30]);
-          cpudata.push(['e',30]);
-          cpudata.push(['f',30]);
-          cpudata.push(['g',30]);
-          interactive_plotCpu.setData([cpudata]);
+    $(function () {
+      // After HTML Load Jquery Start
 
-          // Since the axes don't change, we don't need to call plot.setupGrid()
-          interactive_plotCpu.draw()
-
-        },
-
-        error: function (request, status, error) {
-          var msg = "ERROR : " + request.status + "<br>"
-          msg += + "내용 : " + request.responseText + "<br>" + error;
-          console.log(msg);
-        }
-      });
-    }
-    getrealtimeCpuData();
-    var data        = [],
-        totalPoints = 100
-
-    function getRandomData() {
-
-      if (data.length > 0) {
-        data = data.slice(1)
+      const todayDate = new Date();
+      const getMonth = todayDate.getMonth() + 1 ;
+      const getDay = todayDate.getDate();
+      var fullMonth="";
+      var fulldate="";
+      if(getMonth<10){
+        fullMonth="0"+getMonth.toString();
       }
-
-      // Do a random walk
-      while (data.length < totalPoints) {
-
-        var prev = data.length > 0 ? data[data.length - 1] : 50,
-            y    = prev + Math.random() * 10 - 5
-
-        if (y < 0) {
-          y = 0
-        } else if (y > 100) {
-          y = 100
-        }
-
-        data.push(y)
+      else{
+        fullMonth = getMonth.toString();
       }
-
-      // Zip the generated y values with the x values
-      var res = []
-      for (var i = 0; i < data.length; ++i) {
-        res.push([i, data[i]])
+      if(getDay<10){
+        fulldate="0"+getDay.toString();
       }
+      else{
+        fulldate = getDay.toString();
+      }
+      const todayPreFileName = todayDate.getFullYear().toString() + fullMonth + fulldate;
 
-      return res
-    }
+      /*
+      * DONUT CHART
+      * -----------
+      */
 
-    var interactive_plotCpu = $.plot('#interactiveCpu', [
+      var donutData = [
         {
-          data: getRandomData(),
-        }
-      ],
-      {
-        grid: {
-          borderColor: '#f3f3f3',
-          borderWidth: 1,
-          tickColor: '#f3f3f3'
+          label: 'Series2',
+          data: 30,
+          color: '#3c8dbc'
         },
-        series: {
-          color: '#3c8dbc',
-          lines: {
-            lineWidth: 2,
-            show: true,
-            fill: true,
-          },
-        },
-        yaxis: {
-          min: 0,
-          max: 100,
-          show: true
-        },
-        xaxis: {
-          show: true
-        }
-      }
-    )
-
-    var interactive_plotMemory = $.plot('#interactiveMemory', [
         {
-          data: getRandomData(),
-        }
-      ],
-      {
-        grid: {
-          borderColor: '#f3f3f3',
-          borderWidth: 1,
-          tickColor: '#f3f3f3'
+          label: 'Series3',
+          data: 20,
+          color: '#0073b7'
         },
+        {
+          label: 'Series4',
+          data: 50,
+          color: '#00c0ef'
+        }
+      ]
+      $.plot('#donut-chart-cpu', donutData, {
         series: {
-          color: '#3c8dbc',
-          lines: {
-            lineWidth: 2,
+          pie: {
             show: true,
-            fill: true,
-          },
-        },
-        yaxis: {
-          min: 0,
-          max: 100,
-          show: true
-        },
-        xaxis: {
-          show: true
-        }
-      }
-    )
-
-
-    var updateInterval = 10000 //Fetch data ever x milliseconds
-    var realtimeCpu       = 'on' //If == to on then fetch data every x seconds. else stop fetching
-    var realtimeMemory       = 'on' //If == to on then fetch data every x seconds. else stop fetching
-    function updateCpu() {
-
-      interactive_plotCpu.setData([getRandomData()])
-
-      // Since the axes don't change, we don't need to call plot.setupGrid()
-      interactive_plotCpu.draw()
-      if (realtimeCpu === 'on') {
-        setTimeout(updateCpu, updateInterval)
-      }
-    }
-
-    function updateMemory() {
-
-      interactive_plotMemory.setData([getRandomData()])
-
-      // Since the axes don't change, we don't need to call plot.setupGrid()
-      interactive_plotMemory.draw()
-      if (realtimeMemory === 'on') {
-        setTimeout(updateMemory, updateInterval)
-      }
-    }
-
-    //INITIALIZE REALTIME DATA FETCHING
-    if (realtimeCpu === 'on') {
-      //updateCpu()
-    }
-    if (realtimeMemory === 'on') {
-      //updateMemory()
-    }
-
-    //REALTIME TOGGLE
-    $('#realtimeCpu .btn').click(function () {
-      if ($(this).data('toggle') === 'on') {
-        realtimeCpu = 'on'
-      }
-      else {
-        realtimeCpu = 'off'
-      }
-      updateCpu()
-    })
-
-    $('#realtimeMemory .btn').click(function () {
-      if ($(this).data('toggle') === 'on') {
-        realtimeMemory = 'on'
-      }
-      else {
-        realtimeMemory = 'off'
-      }
-      updateMemory()
-    })
-
-    /*
-    Get Current Cpu
-    */
-    function getCurrentCpu() {
-      $.ajax({
-        url: "data/cpu/20200116cpu",
-        type: "GET",
-        cache: false,
-        success: function (data) {
-          var currentCpu = [
-            {
-              label: 'restcpu',
-              data: 80,
-              color: '#3c8dbc'
-            },
-            {
-              label: 'Series3',
-              data: 10,
-              color: '#0073b7'
-            },
-            {
-              label: 'Series4',
-              data: 10,
-              color: '#00c0ef'
+            radius: 1,
+            innerRadius: 0.5,
+            label: {
+              show: true,
+              radius: 2 / 3,
+              formatter: labelFormatter,
+              threshold: 0.1
             }
-          ]
-          $.plot('#donut-chart-cpu', currentCpu, {
-            series: {
-              pie: {
-                show: true,
-                radius: 1,
-                innerRadius: 0.5,
-                label: {
-                  show: true,
-                  radius: 2 / 3,
-                  formatter: labelFormatter,
-                  threshold: 0.1
-                }
 
+          }
+        },
+        legend: {
+          show: false
+        }
+      })
+      $.plot('#donut-chart-memory', donutData, {
+        series: {
+          pie: {
+            show: true,
+            radius: 1,
+            innerRadius: 0.5,
+            label: {
+              show: true,
+              radius: 2 / 3,
+              formatter: labelFormatter,
+              threshold: 0.1
+            }
+
+          }
+        },
+        legend: {
+          show: false
+        }
+      })
+      $.plot('#donut-chart-disk', donutData, {
+        series: {
+          pie: {
+            show: true,
+            radius: 1,
+            innerRadius: 0.5,
+            label: {
+              show: true,
+              radius: 2 / 3,
+              formatter: labelFormatter,
+              threshold: 0.1
+            }
+
+          }
+        },
+        legend: {
+          show: false
+        }
+      })
+
+      /*
+      Get Current Cpu
+      */
+      function getCurrentCpu() {
+        $.ajax({
+          url:
+          "data/cpu/"+ todayPreFileName + "_Cpu",
+          type: "GET",
+          cache: false,
+          success: function (data) {
+            var currentCpuDataSplit = data.toString().split("\n");
+            var currentCpu = [
+              {
+                label: 'restcpu',
+                data: currentCpuDataSplit[0],
+                color: '#3c8dbc'
+              },
+              {
+                label: 'Series3',
+                data: currentCpuDataSplit[1],
+                color: '#0073b7'
+              },
+              {
+                label: 'Series4',
+                data: currentCpuDataSplit[2],
+                color: '#00c0ef'
               }
-            },
-            legend: {
-              show: false
-            }
-          })
+            ]
+            $.plot('#donut-chart-cpu', currentCpu, {
+              series: {
+                pie: {
+                  show: true,
+                  radius: 1,
+                  innerRadius: 0.5,
+                  label: {
+                    show: true,
+                    radius: 2 / 3,
+                    formatter: labelFormatter,
+                    threshold: 0.1
+                  }
 
-          console.log(data);
-          $("#currentCpu").val("50");
-          $("#currentCpu").attr('value', '90');
-        },
+                }
+              },
+              legend: {
+                show: false
+              }
+            })
+          },
 
-        error: function (request, status, error) {
-          var msg = "ERROR : " + request.status + "<br>"
-          msg += + "내용 : " + request.responseText + "<br>" + error;
-          console.log(msg);
-        }
-      });
-    }
-    getCurrentCpu();
-
-    /*
-     * END INTERACTIVE CHART
-     */
-
-    /*
-    * DONUT CHART
-    * -----------
-    */
-
-    var donutData = [
-      {
-        label: 'Series2',
-        data: 30,
-        color: '#3c8dbc'
-      },
-      {
-        label: 'Series3',
-        data: 20,
-        color: '#0073b7'
-      },
-      {
-        label: 'Series4',
-        data: 50,
-        color: '#00c0ef'
-      }
-    ]
-    $.plot('#donut-chart-cpu', donutData, {
-      series: {
-        pie: {
-          show: true,
-          radius: 1,
-          innerRadius: 0.5,
-          label: {
-            show: true,
-            radius: 2 / 3,
-            formatter: labelFormatter,
-            threshold: 0.1
+          error: function (request, status, error) {
+            var msg = "ERROR : " + request.status + "<br>"
+            msg += + "내용 : " + request.responseText + "<br>" + error;
+            console.log(msg);
           }
-
-        }
-      },
-      legend: {
-        show: false
+        });
       }
-    })
-    $.plot('#donut-chart-memory', donutData, {
-      series: {
-        pie: {
-          show: true,
-          radius: 1,
-          innerRadius: 0.5,
-          label: {
-            show: true,
-            radius: 2 / 3,
-            formatter: labelFormatter,
-            threshold: 0.1
-          }
-
-        }
-      },
-      legend: {
-        show: false
-      }
-    })
-    $.plot('#donut-chart-disk', donutData, {
-      series: {
-        pie: {
-          show: true,
-          radius: 1,
-          innerRadius: 0.5,
-          label: {
-            show: true,
-            radius: 2 / 3,
-            formatter: labelFormatter,
-            threshold: 0.1
-          }
-
-        }
-      },
-      legend: {
-        show: false
-      }
-    })
-
-
-
-    /*
+      getCurrentCpu();
+      /*
      * END DONUT CHART
      */
-  })
+
       /*
-     * Custom Label formatter
-     * ----------------------
-     */
-      function labelFormatter(label, series) {
-        return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
-          + label
-          + '<br>'
-          + Math.round(series.percent) + '%</div>'
+       * Flot Interactive Chart
+       * -----------------------
+       */
+      // We use an inline data source in the example, usually data would
+      // be fetched from a server
+      var cpudata = [];
+      var cputotalCount = 100;
+      function getrealtimeCpuData() {
+        $.ajax({
+          url: "data/cpu/"+ todayPreFileName + "_RealTimeCpu",
+          type: "GET",
+          cache: false,
+          success: function (data) {
+            
+            var currentCpuDataSplit = data.toString().split("\n");
+            var tempList=[];
+            currentCpuDataSplit
+            for(i=0;i<currentCpuDataSplit.length;i++){
+              var temp = currentCpuDataSplit[i].toString().split(" ");
+              tempList.push(temp[0]);
+            }
+            for(;cputotalCount<tempList.length;){
+              tempList.slice(1);
+            }
+            for(i=0;i<tempList.length;i++){
+              cpudata.push([i,tempList[i]]);
+            }
+            interactive_plotCpu.setData([cpudata]);
+
+            // Since the axes don't change, we don't need to call plot.setupGrid()
+            interactive_plotCpu.draw()
+
+          },
+
+          error: function (request, status, error) {
+            var msg = "ERROR : " + request.status + "<br>"
+            msg += + "내용 : " + request.responseText + "<br>" + error;
+            console.log(msg);
+          }
+        });
       }
+      getrealtimeCpuData();
+
+      var data = [],
+        totalPoints = 100
+
+      function getRandomData() {
+
+        if (data.length > 0) {
+          data = data.slice(1)
+        }
+
+        // Do a random walk
+        while (data.length < totalPoints) {
+
+          var prev = data.length > 0 ? data[data.length - 1] : 50,
+            y = prev + Math.random() * 10 - 5
+
+          if (y < 0) {
+            y = 0
+          } else if (y > 100) {
+            y = 100
+          }
+
+          data.push(y)
+        }
+
+        // Zip the generated y values with the x values
+        var res = []
+        for (var i = 0; i < data.length; ++i) {
+          res.push([i, data[i]])
+        }
+
+        return res
+      }
+
+      var interactive_plotCpu = $.plot('#interactiveCpu', [
+        {
+          data: getRandomData(),
+        }
+      ],
+        {
+          grid: {
+            borderColor: '#f3f3f3',
+            borderWidth: 1,
+            tickColor: '#f3f3f3'
+          },
+          series: {
+            color: '#3c8dbc',
+            lines: {
+              lineWidth: 2,
+              show: true,
+              fill: true,
+            },
+          },
+          yaxis: {
+            min: 0,
+            max: 100,
+            show: true
+          },
+          xaxis: {
+            show: true
+          }
+        }
+      )
+
+      var interactive_plotMemory = $.plot('#interactiveMemory', [
+        {
+          data: getRandomData(),
+        }
+      ],
+        {
+          grid: {
+            borderColor: '#f3f3f3',
+            borderWidth: 1,
+            tickColor: '#f3f3f3'
+          },
+          series: {
+            color: '#3c8dbc',
+            lines: {
+              lineWidth: 2,
+              show: true,
+              fill: true,
+            },
+          },
+          yaxis: {
+            min: 0,
+            max: 100,
+            show: true
+          },
+          xaxis: {
+            show: true
+          }
+        }
+      )
+
+
+      var updateInterval = 10000 //Fetch data ever x milliseconds
+      var realtimeCpu = 'on' //If == to on then fetch data every x seconds. else stop fetching
+      var realtimeMemory = 'on' //If == to on then fetch data every x seconds. else stop fetching
+      function updateCpu() {
+
+        interactive_plotCpu.setData([getRandomData()])
+
+        // Since the axes don't change, we don't need to call plot.setupGrid()
+        interactive_plotCpu.draw()
+        if (realtimeCpu === 'on') {
+          setTimeout(updateCpu, updateInterval)
+        }
+      }
+
+      function updateMemory() {
+
+        interactive_plotMemory.setData([getRandomData()])
+
+        // Since the axes don't change, we don't need to call plot.setupGrid()
+        interactive_plotMemory.draw()
+        if (realtimeMemory === 'on') {
+          setTimeout(updateMemory, updateInterval)
+        }
+      }
+
+      //INITIALIZE REALTIME DATA FETCHING
+      if (realtimeCpu === 'on') {
+        //updateCpu()
+      }
+      if (realtimeMemory === 'on') {
+        //updateMemory()
+      }
+
+      //REALTIME TOGGLE
+      $('#realtimeCpu .btn').click(function () {
+        if ($(this).data('toggle') === 'on') {
+          realtimeCpu = 'on'
+        }
+        else {
+          realtimeCpu = 'off'
+        }
+        updateCpu()
+      })
+
+      $('#realtimeMemory .btn').click(function () {
+        if ($(this).data('toggle') === 'on') {
+          realtimeMemory = 'on'
+        }
+        else {
+          realtimeMemory = 'off'
+        }
+        updateMemory()
+      })
+
+      /*
+       * END INTERACTIVE CHART
+       */
+    })
+      /*
+       * Custom Label formatter
+       * ----------------------
+       */
+        function labelFormatter(label, series) {
+          return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
+            + label
+            + '<br>'
+            + Math.round(series.percent) + '%</div>'
+        }
 
 </script>
 </body>
