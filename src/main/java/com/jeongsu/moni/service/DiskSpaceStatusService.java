@@ -33,8 +33,7 @@ public class DiskSpaceStatusService {
             diskSpaceStatus.setId(Long.valueOf(diskUsageList.size()+1));
             diskSpaceStatus.setDiskName(fs.getName());
             diskSpaceStatus.setFreeSpace(fs.getFreeSpace() / 1024 / 1024 / 1024);
-            diskSpaceStatus.setUsedSpace(fs.getUsableSpace() / 1024 / 1024 / 1024 );
-            System.out.println(fs);
+            diskSpaceStatus.setUsedSpace( (fs.getTotalSpace() - fs.getFreeSpace()) / 1024 / 1024 / 1024 );
             diskUsageList.add(diskSpaceStatus);
         }
     }

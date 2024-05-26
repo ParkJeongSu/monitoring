@@ -16,18 +16,27 @@ public class TablespaceStatusService {
     @Autowired
     private TablespaceStatusRepository repository;
 
+    private static List<TablespaceStatus> tablespaceStatusList =  new ArrayList<>();
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public List<TablespaceStatus> getAllTablespaces() {
-        List<TablespaceStatus> tablespaceStatusList = new ArrayList<>();
+        if(tablespaceStatusList.size() == 0 )
+        {
+            this.setAllTablespaces();
+        }
+        return tablespaceStatusList;
+    }
+
+    public void setAllTablespaces()
+    {
         StringBuffer sql = new StringBuffer();
         sql.append(" SELECT " );
-        sql.append(" 	rownum \"ID\", " );
-        sql.append(" 	A.TABLESPACE_NAME \"TABLESPACENAME\", " );
-        sql.append(" 	ROUND((A.BYTES-B.FREE)/ 1024 / 1024 / 1024, 2) \"USEDSPACE\", " );
-        sql.append(" 	ROUND(B.FREE / 1024 / 1024 / 1024, 2) \"FREESPACE\" " );
+        sql.append(" 	rownum ID, " );
+        sql.append(" 	A.TABLESPACE_NAME tablespace_name, " );
+        sql.append(" 	ROUND((A.BYTES-B.FREE)/ 1024 / 1024 / 1024, 2) used_space, " );
+        sql.append(" 	ROUND(B.FREE / 1024 / 1024 / 1024, 2) free_space " );
         sql.append(" FROM " );
         sql.append(" 	( " );
         sql.append(" 	SELECT " );
@@ -67,13 +76,17 @@ public class TablespaceStatusService {
         try {
             Query query = entityManager.createNativeQuery(sql.toString(), TablespaceStatus.class);
             tablespaceStatusList = query.getResultList();
+            for(TablespaceStatus t : tablespaceStatusList)
+            {
+                System.out.println(t.getTablespaceName());
+                System.out.println(t.getId());
+                System.out.println(t.getFreeSpace());
+                System.out.println(t.getUsedSpace());
+            }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
-        return tablespaceStatusList;
     }
 
 }
