@@ -23,3 +23,17 @@ function autoRefresh() {
 
 // 페이지가 로드되면 autoRefresh 함수 실행
 window.onload = autoRefresh;
+
+
+// Dynamically resize canvas to fit the parent element
+//function resizeCanvas(canvas) {
+//    const parent = canvas.parentElement;
+//    canvas.width = parent.clientWidth;
+//    canvas.height = parent.clientHeight;
+//}
+//
+//const canvases = document.querySelectorAll('canvas');
+//canvases.forEach(canvas => {
+//    resizeCanvas(canvas);
+//    window.addEventListener('resize', () => resizeCanvas(canvas));
+//});
