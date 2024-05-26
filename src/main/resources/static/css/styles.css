@@ -1,0 +1,13 @@
+/* styles.css */
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.server-list, .tablespace, .disk-space, .cpu-usage, .memory-usage {
+    margin-bottom: 20px;
+}
+
+h2 {
+    text-align: center;
+}

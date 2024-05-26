@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Server and DB Monitoring</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <script src="/js/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="server-list">
+        <h2>Server List</h2>
+        <table>
+            <tr>
+                <th>Server Name</th>
+                <th>Status</th>
+            </tr>
+            <tr th:each="processes : ${processes}">
+                <td th:text="${processes.processName}">Server Name</td>
+                <td th:text="${processes.alive ? 'Alive' : 'Dead'}">Status</td>
+            </tr>
+        </table>
+    </div>
+    <div class="tablespace">
+        <h2>DB Tablespace</h2>
+        <div id="tablespace-div">
+            <canvas id="tablespace-chart" width="200" height="200"></canvas>
+        </div>
+    </div>
+    <div class="disk-space">
+        <h2>Disk Space</h2>
+        <div id="disk-space-div">
+            <canvas id="disk-usage-chart" width="200" height="200"></canvas>
+        </div>
+    </div>
+    <div class="cpu-usage">
+        <h2>CPU Usage</h2>
+        <div id="cpu-usage-div">
+            <canvas id="cpu-usage-chart" width="200" height="200"></canvas>
+        </div>
+    </div>
+    <div class="memory-usage">
+        <h2>Memory Usage</h2>
+        <div id="memory-usage-div">
+            <canvas id="memory-usage-chart" width="200" height="200"></canvas>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+
+
+    /*<![CDATA[*/
+    var tablespaceList = /*[[${databaseTablespace}]]*/ [];
+    /*]]>*/
+
+    /*<![CDATA[*/
+    var cpuUsageList = /*[[${cpuUsages}]]*/ [];
+    /*]]>*/
+
+    /*<![CDATA[*/
+    var memoryUsageList = /*[[${memoryUsages}]]*/ [];
+    /*]]>*/
+
+    /*<![CDATA[*/
+    var diskUsagesList = /*[[${diskUsages}]]*/ [];
+    /*]]>*/
+
+    /*<![CDATA[*/
+    var refreshTime = /*[[${refreshment}]]*/ [];
+    /*]]>*/
+
+
+
+</script>
+<script src="/js/scripts.js"></script>
+<script src="/js/CpuScripts.js"></script>
+<script src="/js/MemoryScripts.js"></script>
+<script src="/js/DiskScripts.js"></script>
+<script src="/js/TableSpaceScripts.js"></script>
+</body>
+</html>
